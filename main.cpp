@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+<<<<<<< HEAD
 #include "hero.hpp"
 #include <iostream>
 
@@ -14,7 +15,7 @@ int main() {
     sf::RectangleShape fundo;
     fundo.setSize(sf::Vector2f(800, 600));
     fundo.setFillColor(sf::Color::White);
-
+    
     sf::RectangleShape base;
     base.setSize(sf::Vector2f(300, 200));
     base.setFillColor(sf::Color::Green);
@@ -24,7 +25,7 @@ int main() {
     base2.setSize(sf::Vector2f(280, 180));
     base2.setFillColor(sf::Color::White);
     base2.setPosition(260, 210);
-
+    
     // texturas para vida e munição
     sf::Texture texturaVida;
     sf::Texture texturaMunicao;
