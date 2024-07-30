@@ -1,5 +1,4 @@
 #include <SFML/Graphics.hpp>
-<<<<<<< HEAD
 #include "hero.hpp"
 #include <iostream>
 
@@ -104,3 +103,4 @@ int main() {
 
     return 0;
 }
+
