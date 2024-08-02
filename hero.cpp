@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "hero.hpp"
+#include "Header/hero.hpp"
 
 Heroi::Heroi()
     : munição(100), maxMunição(100), vida(100), maxVida(100), velocidadeMovimento(4.0f), movendo(false) {
