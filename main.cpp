@@ -31,8 +31,8 @@ int main() {
     Icone VidaIcone("Media/Images/heart.png", sf::Vector2f(720, 4), sf::Vector2f(1.0f, 1.0f));
     Icone municaoIcone("Media/Images/bullet.png", sf::Vector2f(730, 30), sf::Vector2f(0.02f, 0.02f));
 
-    Texto textoVida("Font/ARIAL.TTF", "100", 20, sf::Color::Red, sf::Vector2f(750, 7));
-    Texto textoMunicao("Font/ARIAL.TTF", "50", 20, sf::Color::Blue, sf::Vector2f(750, 30));
+    Texto textoVida("Media/Font/ARIAL.TTF", "100", 20, sf::Color::Red, sf::Vector2f(750, 7));
+    Texto textoMunicao("Media/Font/ARIAL.TTF", "50", 20, sf::Color::Blue, sf::Vector2f(750, 30));
 
     sf::Event evento;
     while (janela.isOpen()) {

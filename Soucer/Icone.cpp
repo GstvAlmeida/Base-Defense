@@ -1,4 +1,4 @@
-#include "Header/Icone.hpp"
+#include "../Header/Icone.hpp"
 
 Icone::Icone(const std::string& caminhoTextura, sf::Vector2f posicao, sf::Vector2f escala) {
     if (!textura.loadFromFile(caminhoTextura)) {
