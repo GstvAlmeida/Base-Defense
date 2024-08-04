@@ -5,14 +5,13 @@
 #include <string>
 
 class Icone {
+private:
+    sf::Texture textura;
+    sf::Sprite sprite;
 public:
     Icone(const std::string& caminhoTextura, sf::Vector2f posicao, sf::Vector2f escala);
 
     void draw(sf::RenderWindow& window);
-
-private:
-    sf::Texture textura;
-    sf::Sprite sprite;
 };
 
 #endif 

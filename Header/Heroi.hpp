@@ -1,5 +1,5 @@
-#ifndef HERO_HPP
-#define HERO_HPP
+#ifndef HEROI_HPP
+#define HEROI_HPP
 
 #include <SFML/Graphics.hpp>
 
@@ -9,6 +9,8 @@ private:
     int maxMunição;
     int vida;
     int maxVida;
+    int base;
+    int maxBase;
     float velocidadeMovimento;
     bool movendo;
     sf::Vector2f posiçãoAlvo;
@@ -22,10 +24,13 @@ public:
     }
 
     void setVida(int novaVida, int dano);
+    void setBase(int novaVida, int dano);
     int getVida() const;
     int getMaxVida() const;
     int getMunição() const;
     int getMaxMunição() const;
+    int getBase() const;
+    int getMaxBase() const;
     bool isMovendo() const;
     sf::Vector2f getPosição() const;
     void setPosição(const sf::Vector2f& posição);

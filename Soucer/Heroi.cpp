@@ -1,11 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "../Header/hero.hpp"
+#include "../Header/Heroi.hpp"
 
 Heroi::Heroi()
-    : munição(100), maxMunição(100), vida(100), maxVida(100), velocidadeMovimento(4.0f), movendo(false) {
+    : munição(100), maxMunição(100), vida(100), maxVida(100), base(100), maxBase(100), velocidadeMovimento(4.0f), movendo(false) {
     sprite.setRadius(5.0f); // Raio do círculo do herói
-    sprite.setFillColor(sf::Color::White); // Cor do círculo do herói
+    sprite.setFillColor(sf::Color(230, 230, 230)); // Cor do círculo do herói
     sprite.setOutlineThickness(1.0f); // Espessura do contorno
     sprite.setOutlineColor(sf::Color::Black); // Cor do contorno
     sprite.setPosition(395, 295); // Posição inicial do herói
@@ -14,6 +14,10 @@ Heroi::Heroi()
 
 void Heroi::setVida(int novaVida, int dano) {
     this->vida = std::max(0, novaVida - dano);
+}
+
+void Heroi::setBase(int novaBase, int dano) {
+    this->base = std::max(0, novaBase - dano);
 }
 
 int Heroi::getVida() const {
@@ -30,6 +34,10 @@ int Heroi::getMunição() const {
 
 int Heroi::getMaxMunição() const {
     return maxMunição;
+}
+
+int Heroi::getBase() const {
+    return base;
 }
 
 bool Heroi::isMovendo() const {

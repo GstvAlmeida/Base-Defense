@@ -1,8 +1,10 @@
 #include <SFML/Graphics.hpp>
-#include "Header/hero.hpp"
+#include "Header/Heroi.hpp"
 #include "Header/Icone.hpp"
 #include "Header/Texto.hpp"
+#include "Header/Projetil.hpp"
 #include <iostream>
+#include <vector>
 
 int main() {
     // Criar herói
@@ -28,25 +30,44 @@ int main() {
     base2.setPosition(260, 210);
 
     // Criar ícones e textos
-    Icone VidaIcone("Media/Images/heart.png", sf::Vector2f(720, 4), sf::Vector2f(1.0f, 1.0f));
-    Icone municaoIcone("Media/Images/bullet.png", sf::Vector2f(730, 30), sf::Vector2f(0.02f, 0.02f));
+    Icone VidaIcone("Media/Images/heart.png", sf::Vector2f(723, 3), sf::Vector2f(1.0f, 1.0f));
+    Icone MunicaoIcone("Media/Images/bullet.png", sf::Vector2f(734, 30), sf::Vector2f(0.8f, 0.8f));
+    Icone BaseIcone("Media/Images/Home.png", sf::Vector2f(724, 55), sf::Vector2f(0.15f, 0.15f));
 
-    Texto textoVida("Media/Font/ARIAL.TTF", "100", 20, sf::Color::Red, sf::Vector2f(750, 7));
-    Texto textoMunicao("Media/Font/ARIAL.TTF", "50", 20, sf::Color::Blue, sf::Vector2f(750, 30));
+    Texto textoVida("Media/Font/ARIAL.TTF", "100", 20, sf::Color::Red, sf::Vector2f(753, 6));
+    Texto textoMunicao("Media/Font/ARIAL.TTF", "50", 20, sf::Color(74, 54, 30), sf::Vector2f(753, 30));
+    Texto textoBase("Media/Font/ARIAL.TTF", "50", 20, sf::Color(0, 30, 0), sf::Vector2f(753, 57));
 
+    std::vector<Projetil> projéteis;
     sf::Event evento;
+
     while (janela.isOpen()) {
         while (janela.pollEvent(evento)) {
             if (evento.type == sf::Event::Closed)
                 janela.close();
+
+            if (evento.type == sf::Event::KeyPressed && evento.key.code == sf::Keyboard::Q) {
+                Projetil::dispararProjétil(heroi, janela, projéteis);
+            }
         }
 
         // Atualizar o herói
         heroi.atualizar(janela, evento);
 
+        // Atualizar projéteis
+        for (auto it = projéteis.begin(); it != projéteis.end(); ) {
+            it->atualizar();
+            if (it->fora_da_janela(janela)) {
+                it = projéteis.erase(it);
+            } else {
+                ++it;
+            }
+        }
+
         // Atualizar textos
         textoVida.setString(std::to_string(heroi.getVida()));
         textoMunicao.setString(std::to_string(heroi.getMunição()));
+        textoBase.setString(std::to_string(heroi.getBase()));
 
         janela.clear();
         janela.draw(fundo);
@@ -56,10 +77,19 @@ int main() {
         // Desenhar os ícones e textos no canto superior direito
         VidaIcone.draw(janela);
         textoVida.draw(janela);
-        municaoIcone.draw(janela);
+        MunicaoIcone.draw(janela);
         textoMunicao.draw(janela);
+        BaseIcone.draw(janela);
+        textoBase.draw(janela);
 
+        // Desenhar o herói
         janela.draw(heroi.getCircle());
+
+        // Desenhar projéteis
+        for (const auto& projetil : projéteis) {
+            projetil.desenhar(janela);
+        }
+
         janela.display();
     }
 
