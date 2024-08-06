@@ -22,10 +22,13 @@ bool Projetil::fora_da_janela(const sf::RenderWindow& janela) const {
 }
 
 void Projetil::dispararProjétil(Heroi& heroi, sf::RenderWindow& janela, std::vector<Projetil>& projéteis) {
-    sf::Vector2f posiçãoHeroi = heroi.getPosição();
-    sf::Vector2i posiçãoMouse = sf::Mouse::getPosition(janela);
-    sf::Vector2f direçãoMouse = sf::Vector2f(static_cast<float>(posiçãoMouse.x), static_cast<float>(posiçãoMouse.y)) - posiçãoHeroi;
-    float comprimento = std::sqrt(direçãoMouse.x * direçãoMouse.x + direçãoMouse.y * direçãoMouse.y);
-    direçãoMouse /= comprimento; // Normalizar a direção
-    projéteis.emplace_back(posiçãoHeroi, direçãoMouse, 5.0f); // Velocidade do projétil
+    if (heroi.getMunição() > 0) {
+        sf::Vector2f posiçãoHeroi = heroi.getPosição();
+        sf::Vector2i posiçãoMouse = sf::Mouse::getPosition(janela);
+        sf::Vector2f direçãoMouse = sf::Vector2f(static_cast<float>(posiçãoMouse.x), static_cast<float>(posiçãoMouse.y)) - posiçãoHeroi;
+        float comprimento = std::sqrt(direçãoMouse.x * direçãoMouse.x + direçãoMouse.y * direçãoMouse.y);
+        direçãoMouse /= comprimento; //constante
+        projéteis.emplace_back(posiçãoHeroi, direçãoMouse, 5.0f); // Velocidade do projétil
+        heroi.SetMunição();
+    }
 }

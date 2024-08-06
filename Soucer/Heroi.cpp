@@ -19,7 +19,11 @@ void Heroi::setVida(int novaVida, int dano) {
 void Heroi::setBase(int novaBase, int dano) {
     this->base = std::max(0, novaBase - dano);
 }
-
+void Heroi::SetMunição() {
+    if (munição > 0) {
+        munição--;
+    }
+}
 int Heroi::getVida() const {
     return vida;
 }
