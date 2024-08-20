@@ -27,8 +27,12 @@ void Projetil::dispararProjétil(Heroi& heroi, sf::RenderWindow& janela, std::ve
         sf::Vector2i posiçãoMouse = sf::Mouse::getPosition(janela);
         sf::Vector2f direçãoMouse = sf::Vector2f(static_cast<float>(posiçãoMouse.x), static_cast<float>(posiçãoMouse.y)) - posiçãoHeroi;
         float comprimento = std::sqrt(direçãoMouse.x * direçãoMouse.x + direçãoMouse.y * direçãoMouse.y);
-        direçãoMouse /= comprimento; //constante
+        direçãoMouse /= comprimento;
         projéteis.emplace_back(posiçãoHeroi, direçãoMouse, 5.0f); // Velocidade do projétil
         heroi.SetMunição();
     }
+}
+
+sf::CircleShape Projetil::getForma() const {
+    return forma;
 }

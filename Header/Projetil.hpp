@@ -18,6 +18,7 @@ public:
     void desenhar(sf::RenderWindow& janela) const;
     bool fora_da_janela(const sf::RenderWindow& janela) const;
     static void dispararProjétil(Heroi& heroi, sf::RenderWindow& janela, std::vector<Projetil>& projéteis);
+    sf::CircleShape getForma() const; // Método adicionado
     int setMun(int mun);
 };
 

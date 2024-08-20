@@ -39,4 +39,4 @@ public:
     void atualizar(sf::RenderWindow& janela, sf::Event& evento);
 };
 
-#endif
+#endif 
