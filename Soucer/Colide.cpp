@@ -1,4 +1,6 @@
 #include "../Header/Colide.hpp"
+#include "../Header/Heroi.hpp"
+#include "../Header/Icone.hpp"
 #include <cmath>
 
 // Função para colisão entre dois círculos
@@ -37,3 +39,30 @@ bool colide(const sf::CircleShape& circulo, const sf::RectangleShape& retangulo)
 
     return distancia < raio;
 }
+
+void verificarColisoes(std::vector<Icone>& icones, Heroi& heroi) {
+    for (auto it = icones.begin(); it != icones.end(); ++it) {
+        // Pega os bounds do sprite do ícone
+        sf::FloatRect spriteBounds = it->getSprite().getGlobalBounds();
+
+        // Cria um RectangleShape temporário baseado nos bounds do sprite
+        sf::RectangleShape spriteShape(sf::Vector2f(spriteBounds.width, spriteBounds.height));
+        spriteShape.setPosition(spriteBounds.left, spriteBounds.top);
+
+        // Verifica colisão entre o círculo do herói e o sprite do ícone
+        if (colide(heroi.getCircle(), spriteShape)) {
+            // Se houver colisão, código de coleta do ícone
+            // Exemplo: heroi ganha vida ou munição, dependendo do tipo de ícone
+            if (it->isLifeIcon()) {
+                heroi.setVida(heroi.getVida() + 10, 0); // Exemplo: aumenta a vida
+            } else {
+                heroi.SetMunição(heroi.getMunição() + 10); // Exemplo: aumenta a munição
+            }
+
+            // Remove o ícone da lista de ícones, pois foi coletado
+            it = icones.erase(it);
+            --it; // Ajusta o iterador para não pular um elemento
+        }
+    }
+}
+

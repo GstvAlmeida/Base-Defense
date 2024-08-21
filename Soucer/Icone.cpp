@@ -1,6 +1,7 @@
 #include "../Header/Icone.hpp"
 
-Icone::Icone(const std::string& caminhoTextura, sf::Vector2f posicao, sf::Vector2f escala) {
+Icone::Icone(const std::string& caminhoTextura, sf::Vector2f posicao, sf::Vector2f escala, bool isLife)
+    : isLife(isLife) {
     if (!textura.loadFromFile(caminhoTextura)) {
         // Handle error
     }
@@ -11,4 +12,8 @@ Icone::Icone(const std::string& caminhoTextura, sf::Vector2f posicao, sf::Vector
 
 void Icone::draw(sf::RenderWindow& window) {
     window.draw(sprite);
+}
+
+sf::Sprite Icone::getSprite() const {
+    return sprite;
 }

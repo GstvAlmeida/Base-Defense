@@ -29,7 +29,7 @@ void Projetil::dispararProjétil(Heroi& heroi, sf::RenderWindow& janela, std::ve
         float comprimento = std::sqrt(direçãoMouse.x * direçãoMouse.x + direçãoMouse.y * direçãoMouse.y);
         direçãoMouse /= comprimento;
         projéteis.emplace_back(posiçãoHeroi, direçãoMouse, 5.0f); // Velocidade do projétil
-        heroi.SetMunição();
+        heroi.SetMunição(heroi.getMunição() - 1);
     }
 }
 

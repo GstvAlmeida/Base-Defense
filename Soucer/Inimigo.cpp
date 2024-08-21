@@ -2,6 +2,7 @@
 #include "../Header/Projetil.hpp"
 #include "../Header/Heroi.hpp"
 #include "../Header/Colide.hpp"
+#include "../Header/Icone.hpp"
 #include <cmath>
 #include <random>
 #include <chrono>
@@ -11,6 +12,23 @@ Inimigo::Inimigo(const sf::Vector2f& posicaoInicial, const sf::Vector2f& direcao
     corpo.setRadius(7.0f);
     corpo.setFillColor(sf::Color::Red);
     corpo.setPosition(posicaoInicial);
+}
+
+void Inimigo::destruirInimigo(std::vector<Icone>& icones) {
+    // Gera uma chance de 1 em 5 para dropar um ícone
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(1, 5);
+
+    int chance = dist(gen);
+
+    if (chance == 1) {
+        // Dropa ícone de vida
+        icones.emplace_back("Media/Images/VIda+.png", corpo.getPosition(), sf::Vector2f(0.05f, 0.05f), true);
+    } else if (chance == 2) {
+        // Dropa ícone de munição
+        icones.emplace_back("Media/Images/Mun+.png", corpo.getPosition(), sf::Vector2f(0.05f, 0.05f), false);
+    }
 }
 
 void Inimigo::atualizar(const sf::Vector2f& playerPosition) {

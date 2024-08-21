@@ -29,17 +29,20 @@ int main() {
     base2.setFillColor(sf::Color::White);
     base2.setPosition(260, 210);
 
-    Icone VidaIcone("Media/Images/heart.png", sf::Vector2f(723, 3), sf::Vector2f(1.0f, 1.0f));
-    Icone MunicaoIcone("Media/Images/bullet.png", sf::Vector2f(734, 30), sf::Vector2f(0.8f, 0.8f));
-    Icone BaseIcone("Media/Images/Home.png", sf::Vector2f(724, 55), sf::Vector2f(0.15f, 0.15f));
+    Icone VidaIcone("Media/Images/heart.png", sf::Vector2f(723, 3), sf::Vector2f(1.0f, 1.0f), true);
+    Icone MunicaoIcone("Media/Images/bullet.png", sf::Vector2f(734, 30), sf::Vector2f(0.8f, 0.8f), false);
+    Icone BaseIcone("Media/Images/Home.png", sf::Vector2f(724, 55), sf::Vector2f(0.15f, 0.15f), false);
+    Icone KillIcone("Media/Images/Kill.png", sf::Vector2f(728, 85), sf::Vector2f(0.04f, 0.04f), false);
+
 
     Texto textoVida("Media/Font/ARIAL.TTF", "100", 20, sf::Color::Red, sf::Vector2f(753, 6));
     Texto textoMunicao("Media/Font/ARIAL.TTF", "50", 20, sf::Color(74, 54, 30), sf::Vector2f(753, 30));
     Texto textoBase("Media/Font/ARIAL.TTF", "50", 20, sf::Color(0, 30, 0), sf::Vector2f(753, 57));
-    Texto textoInimigo("Media/Font/ARIAL.TTF", "0", 20, sf::Color(0, 30, 0), sf::Vector2f(753, 70));
+    Texto textoKill("Media/Font/ARIAL.TTF", "0", 20, sf::Color(0, 30, 0), sf::Vector2f(765, 82));
 
     std::vector<Projetil> projéteis;
     std::vector<Inimigo> inimigos;
+    std::vector<Icone> icones;
     sf::Event evento;
 
     auto lastAddTime = std::chrono::steady_clock::now();
@@ -83,7 +86,7 @@ int main() {
         textoVida.setString(std::to_string(heroi.getVida()));
         textoMunicao.setString(std::to_string(heroi.getMunição()));
         textoBase.setString(std::to_string(vidaBase));
-        textoInimigo.setString(std::to_string(inimigosDestruídos));
+        textoKill.setString(std::to_string(inimigosDestruídos));
 
         janela.clear();
         janela.draw(fundo);
@@ -96,7 +99,8 @@ int main() {
         textoMunicao.draw(janela);
         BaseIcone.draw(janela);
         textoBase.draw(janela);
-        textoInimigo.draw(janela);
+        KillIcone.draw(janela);
+        textoKill.draw(janela);
 
         janela.draw(heroi.getCircle());
 
@@ -129,6 +133,7 @@ int main() {
             }
 
             if (removido) {
+                it->destruirInimigo(icones); // Adicione a chamada para destruirInimigo aqui
                 it = inimigos.erase(it); // Remove o inimigo se necessário
             } else {
                 it->desenhar(janela); // Desenha o inimigo se não for removido
@@ -143,6 +148,30 @@ int main() {
 
         for (const auto& projétil : projéteis) {
             projétil.desenhar(janela); // Desenha todos os projéteis
+        }
+
+        // Atualizar e desenhar os ícones
+        for (auto it = icones.begin(); it != icones.end(); ) {
+            it->draw(janela);
+
+            sf::FloatRect spriteBounds = it->getSprite().getGlobalBounds();
+
+            // Cria um RectangleShape temporário baseado nos bounds do sprite
+            sf::RectangleShape spriteShape(sf::Vector2f(spriteBounds.width, spriteBounds.height));
+            spriteShape.setPosition(spriteBounds.left, spriteBounds.top);
+
+            // Verifica colisão entre o círculo do herói e o retângulo do sprite
+            if (colide(heroi.getCircle(), spriteShape)) {
+                if (it->isLifeIcon()) {
+                    heroi.setVida(heroi.getVida() + 10, 0);
+                } else if (it->isAmmoIcon()) {
+                    heroi.SetMunição(heroi.getMunição() + 10);
+                }
+
+                it = icones.erase(it); // Remove o ícone após coleta
+            } else {
+                ++it;
+            }   
         }
 
         janela.display(); // Atualiza a tela

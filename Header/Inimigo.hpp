@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Heroi.hpp"
 #include "Projetil.hpp"
+#include "Icone.hpp"
 #include <vector>
 #include <chrono>
 
@@ -14,6 +15,7 @@ public:
     void desenhar(sf::RenderWindow& janela) const;
     void dispararProjétil(const sf::Vector2f& posicaoHeroi);
     void atualizarProjeteis(sf::RenderWindow& janela, Heroi& heroi, sf::RectangleShape& base, int& vidaBase);
+    void destruirInimigo(std::vector<Icone>& icones);
 
     // Método para acessar o corpo do inimigo
     const sf::CircleShape& getCorpo() const;

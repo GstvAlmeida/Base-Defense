@@ -25,7 +25,7 @@ public:
 
     void setVida(int novaVida, int dano);
     void setBase(int novaVida, int dano);
-    void SetMunição();
+    void SetMunição(int novaMunição);
     int getVida() const;
     int getMaxVida() const;
     int getMunição() const;
