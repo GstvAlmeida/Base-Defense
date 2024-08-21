@@ -136,6 +136,11 @@ int main() {
             }
         }
 
+        for (auto& inimigo : inimigos) {
+            inimigo.dispararProjétil(heroi.getPosição());
+            inimigo.atualizarProjeteis(janela, heroi, base, vidaBase);
+        }
+
         for (const auto& projétil : projéteis) {
             projétil.desenhar(janela); // Desenha todos os projéteis
         }

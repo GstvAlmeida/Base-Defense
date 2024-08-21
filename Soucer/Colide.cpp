@@ -2,14 +2,24 @@
 #include <cmath>
 
 // Função para colisão entre dois círculos
-bool colide(const sf::CircleShape& forma1, const sf::CircleShape& forma2) {
-    sf::Vector2f pos1 = forma1.getPosition();
-    sf::Vector2f pos2 = forma2.getPosition();
-    float raio1 = forma1.getRadius();
-    float raio2 = forma2.getRadius();
+bool colide(const sf::Shape& forma1, const sf::Shape& forma2) {
+    // Tenta fazer o cast para sf::CircleShape
+    const sf::CircleShape* circulo1 = dynamic_cast<const sf::CircleShape*>(&forma1);
+    const sf::CircleShape* circulo2 = dynamic_cast<const sf::CircleShape*>(&forma2);
 
-    float distancia = std::sqrt((pos2.x - pos1.x) * (pos2.x - pos1.x) + (pos2.y - pos1.y) * (pos2.y - pos1.y));
-    return distancia < (raio1 + raio2);
+    if (circulo1 && circulo2) {
+        // Colisão entre dois círculos
+        sf::Vector2f pos1 = circulo1->getPosition();
+        sf::Vector2f pos2 = circulo2->getPosition();
+        float raio1 = circulo1->getRadius();
+        float raio2 = circulo2->getRadius();
+
+        float distancia = std::sqrt((pos2.x - pos1.x) * (pos2.x - pos1.x) + (pos2.y - pos1.y) * (pos2.y - pos1.y));
+        return distancia < (raio1 + raio2);
+    }
+
+    // Se as formas não forem círculos, utiliza interseção dos bounds
+    return forma1.getGlobalBounds().intersects(forma2.getGlobalBounds());
 }
 
 // Função para colisão entre um círculo e um retângulo
