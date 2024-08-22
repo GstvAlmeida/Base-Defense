@@ -65,4 +65,3 @@ void verificarColisoes(std::vector<Icone>& icones, Heroi& heroi) {
         }
     }
 }
-
