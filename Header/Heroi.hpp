@@ -19,10 +19,6 @@ private:
 public:
     Heroi();
 
-    sf::CircleShape getCircle() const {
-        return sprite;
-    }
-
     void setVida(int novaVida, int dano);
     void setBase(int novaVida, int dano);
     void SetMunição(int novaMunição);
@@ -37,6 +33,8 @@ public:
     void setPosição(const sf::Vector2f& posição);
     void mover(const sf::Vector2f& deslocamento);
     void atualizar(sf::RenderWindow& janela, sf::Event& evento);
+
+    sf::CircleShape getCircle() const { return sprite;}
 };
 
 #endif 
