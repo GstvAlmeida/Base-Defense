@@ -1,9 +1,10 @@
 #include "../Header/Icone.hpp"
+#include <iostream>
 
 Icone::Icone(const std::string& caminhoTextura, sf::Vector2f posicao, sf::Vector2f escala, bool isLife)
     : isLife(isLife) {
     if (!textura.loadFromFile(caminhoTextura)) {
-        // Handle error
+        std::cout << caminhoTextura << "Não encontrado"; // Error
     }
     sprite.setTexture(textura);
     sprite.setPosition(posicao);

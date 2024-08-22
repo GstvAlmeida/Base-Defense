@@ -6,6 +6,7 @@
 #include "Header/Inimigo.hpp"
 #include "Header/Colide.hpp"
 #include "Header/Som.hpp"
+#include "Header/Fim.hpp"
 #include <iostream>
 #include <vector>
 #include <chrono>
@@ -30,19 +31,19 @@ int main() {
     base2.setFillColor(sf::Color::White);
     base2.setPosition(260, 210);
 
-    Icone VidaIcone("Media/Images/heart.png", sf::Vector2f(723, 3), sf::Vector2f(1.0f, 1.0f), true);
+    Icone VidaIcone("Media/Images/hearts.png", sf::Vector2f(728, 6), sf::Vector2f(0.04f, 0.04f), true);
     Icone MunicaoIcone("Media/Images/bullet.png", sf::Vector2f(734, 30), sf::Vector2f(0.8f, 0.8f), false);
     Icone BaseIcone("Media/Images/Home.png", sf::Vector2f(724, 55), sf::Vector2f(0.15f, 0.15f), false);
     Icone KillIcone("Media/Images/Kill.png", sf::Vector2f(728, 85), sf::Vector2f(0.04f, 0.04f), false);
 
-
-    Texto textoVida("Media/Font/ARIAL.TTF", "100", 20, sf::Color::Red, sf::Vector2f(753, 6));
-    Texto textoMunicao("Media/Font/ARIAL.TTF", "50", 20, sf::Color(74, 54, 30), sf::Vector2f(753, 30));
-    Texto textoBase("Media/Font/ARIAL.TTF", "50", 20, sf::Color(0, 30, 0), sf::Vector2f(753, 57));
+    Texto textoVida("Media/Font/ARIAL.TTF", "100", 20, sf::Color::Red, sf::Vector2f(753, 3));
+    Texto textoMunicao("Media/Font/ARIAL.TTF", "100", 20, sf::Color(74, 54, 30), sf::Vector2f(753, 30));
+    Texto textoBase("Media/Font/ARIAL.TTF", "100", 20, sf::Color(0, 30, 0), sf::Vector2f(753, 57));
     Texto textoKill("Media/Font/ARIAL.TTF", "0", 20, sf::Color(0, 30, 0), sf::Vector2f(765, 82));
     
     Som Drop("Media/Sound/Life.flac");
     Som Kill("Media/Sound/Kill.wav");
+    Som Defeat("Media/Sound/game_over.wav");
 
     std::vector<Projetil> projéteis;
     std::vector<Inimigo> inimigos;
@@ -50,137 +51,180 @@ int main() {
     sf::Event evento;
 
     auto lastAddTime = std::chrono::steady_clock::now();
-    std::chrono::milliseconds intervalo(3000); // 3 segundos
+    std::chrono::milliseconds intervalo(2000); 
 
     int vidaBase = 100;
     int inimigosDestruídos = 0;
+
+    sf::Font font;
+    if (!font.loadFromFile("Media/Font/WHAPER.ttf")) {
+        std::cerr << "Erro ao carregar a fonte." << std::endl;
+        return -1;
+    }
+
+    Fim fimJogo(inimigosDestruídos, font);
+
+    bool jogoAtivo = true;
+    bool fimDeJogo = false;
+    bool reiniciandoJogo = false;
+    std::chrono::steady_clock::time_point fimJogoTempo;
 
     while (janela.isOpen()) {
         while (janela.pollEvent(evento)) {
             if (evento.type == sf::Event::Closed)
                 janela.close();
 
-            if (evento.type == sf::Event::KeyPressed && evento.key.code == sf::Keyboard::Q) {
-                Projetil::dispararProjétil(heroi, janela, projéteis);
+            if (jogoAtivo) {
+                if (evento.type == sf::Event::KeyPressed && evento.key.code == sf::Keyboard::Q) {
+                    Projetil::dispararProjétil(heroi, janela, projéteis);
+                } else if (vidaBase <= 0 || heroi.getVida() <= 0) {
+                    jogoAtivo = false;
+                    fimDeJogo = true;
+                    fimJogoTempo = std::chrono::steady_clock::now();
+                    Defeat.tocar();
+                }
+            } else if (fimDeJogo && evento.type == sf::Event::KeyPressed) {
+                // Reinicie as variáveis do jogo
+                vidaBase = 100;
+                heroi.setVida(100, 0);
+                heroi.SetMunição(100);
+                inimigosDestruídos = 0;
+                projéteis.clear();
+                inimigos.clear();
+                icones.clear();
+                lastAddTime = std::chrono::steady_clock::now(); // Reinicia o temporizador de inimigos
+                fimDeJogo = false;
+                jogoAtivo = true;
+                reiniciandoJogo = false;
             }
         }
-
-        auto now = std::chrono::steady_clock::now();
-        if (now - lastAddTime >= intervalo) {
-            lastAddTime = now;
-
-            sf::Vector2f posicaoInicial = Inimigo::gerarInimigo(janela.getSize());
-            sf::Vector2f direcao(0.0f, 0.0f); // Direção inicial será ajustada na atualização
-            float velocidade = 0.5f; // Ajuste a velocidade conforme necessário
-
-            inimigos.push_back(Inimigo(posicaoInicial, direcao, velocidade));
-        }
-
-        heroi.atualizar(janela, evento);
-
-        for (auto it = projéteis.begin(); it != projéteis.end(); ) {
-            it->atualizar();
-            if (it->fora_da_janela(janela)) {
-                it = projéteis.erase(it);
-            } else {
-                ++it;
-            }
-        }
-
-        textoVida.setString(std::to_string(heroi.getVida()));
-        textoMunicao.setString(std::to_string(heroi.getMunição()));
-        textoBase.setString(std::to_string(vidaBase));
-        textoKill.setString(std::to_string(inimigosDestruídos));
 
         janela.clear();
         janela.draw(fundo);
         janela.draw(base);
         janela.draw(base2);
 
-        VidaIcone.draw(janela);
-        textoVida.draw(janela);
-        MunicaoIcone.draw(janela);
-        textoMunicao.draw(janela);
-        BaseIcone.draw(janela);
-        textoBase.draw(janela);
-        KillIcone.draw(janela);
-        textoKill.draw(janela);
+        if (jogoAtivo) {
+            auto now = std::chrono::steady_clock::now();
+            if (now - lastAddTime >= intervalo) {
+                lastAddTime = now;
 
-        janela.draw(heroi.getCircle());
+                sf::Vector2f posicaoInicial = Inimigo::gerarInimigo(janela.getSize());
+                sf::Vector2f direcao(0.0f, 0.0f); // Ajustada na atualização
+                float velocidade = 0.5f;
 
-        for (auto it = inimigos.begin(); it != inimigos.end(); ) {
-            it->atualizar(heroi.getPosição());
-            
-            bool removido = false;
-
-            // Verificar colisão com a base
-            if (colide(it->getCorpo(), base)) {
-                vidaBase -= 10; // Reduz a vida da base
-                removido = true;
+                inimigos.push_back(Inimigo(posicaoInicial, direcao, velocidade));
             }
 
-            // Verificar colisão com o herói
-            if (colide(it->getCorpo(), heroi.getCircle())) {
-                heroi.setVida(heroi.getVida(), 10); // Reduz a vida do herói
-                removido = true;
-            }
+            heroi.atualizar(janela, evento);
 
-            // Verificar colisão com projéteis
-            for (auto jt = projéteis.begin(); jt != projéteis.end(); ) {
-                if (colide(it->getCorpo(), jt->getForma())) { // Verifica colisão
-                    removido = true;
-                    jt = projéteis.erase(jt); // Remove o projétil
-                    inimigosDestruídos++; // Incrementa o contador de inimigos destruídos
+            for (auto it = projéteis.begin(); it != projéteis.end(); ) {
+                it->atualizar();
+                if (it->fora_da_janela(janela)) {
+                    it = projéteis.erase(it);
                 } else {
-                    ++jt;
+                    ++it;
                 }
             }
 
-            if (removido) {
-                it->destruirInimigo(icones); // Adicione a chamada para destruirInimigo aqui
-                it = inimigos.erase(it); // Remove o inimigo se necessário
-                Kill.tocar();
-            } else {
-                it->desenhar(janela); // Desenha o inimigo se não for removido
-                ++it;
-            }
-        }
+            textoVida.setString(std::to_string(heroi.getVida()));
+            textoMunicao.setString(std::to_string(heroi.getMunição()));
+            textoBase.setString(std::to_string(vidaBase));
+            textoKill.setString(std::to_string(inimigosDestruídos));
 
-        for (auto& inimigo : inimigos) {
-            inimigo.dispararProjétil(heroi.getPosição());
-            inimigo.atualizarProjeteis(janela, heroi, base, vidaBase);
-        }
+            VidaIcone.draw(janela);
+            textoVida.draw(janela);
+            MunicaoIcone.draw(janela);
+            textoMunicao.draw(janela);
+            BaseIcone.draw(janela);
+            textoBase.draw(janela);
+            KillIcone.draw(janela);
+            textoKill.draw(janela);
 
-        for (const auto& projétil : projéteis) {
-            projétil.desenhar(janela); // Desenha todos os projéteis
-        }
+            janela.draw(heroi.getCircle());
 
-        // Atualizar e desenhar os ícones
-        for (auto it = icones.begin(); it != icones.end(); ) {
-            it->draw(janela);
-
-            sf::FloatRect spriteBounds = it->getSprite().getGlobalBounds();
-
-            // Cria um RectangleShape temporário baseado nos bounds do sprite
-            sf::RectangleShape spriteShape(sf::Vector2f(spriteBounds.width, spriteBounds.height));
-            spriteShape.setPosition(spriteBounds.left, spriteBounds.top);
-
-            // Verifica colisão entre o círculo do herói e o retângulo do sprite
-            if (colide(heroi.getCircle(), spriteShape)) {
-                if (it->isLifeIcon()) {
-                    heroi.setVida(heroi.getVida() + 10, 0);
-                } else if (it->isAmmoIcon()) {
-                    heroi.SetMunição(heroi.getMunição() + 10);
-                }
+            for (auto it = inimigos.begin(); it != inimigos.end(); ) {
+                it->atualizar(heroi.getPosição());
                 
-                it = icones.erase(it); // Remove o ícone após coleta
-                Drop.tocar();
-            } else {
-                ++it;
-            }   
+                bool removido = false;
+
+                // Verificar colisão com a base
+                if (colide(it->getCorpo(), base)) {
+                    vidaBase -= 10;
+                    removido = true;
+                }
+
+                // Verificar colisão com o herói
+                if (colide(it->getCorpo(), heroi.getCircle())) {
+                    heroi.setVida(heroi.getVida(), 10);
+                    removido = true;
+                }
+
+                // Verificar colisão com projéteis
+                for (auto jt = projéteis.begin(); jt != projéteis.end(); ) {
+                    if (colide(it->getCorpo(), jt->getForma())) {
+                        removido = true;
+                        jt = projéteis.erase(jt);
+                        inimigosDestruídos++;
+                    } else {
+                        ++jt;
+                    }
+                }
+
+                if (removido) {
+                    it->destruirInimigo(icones);
+                    it = inimigos.erase(it);
+                    Kill.tocar();
+                } else {
+                    it->desenhar(janela);
+                    ++it;
+                }
+            }
+
+            for (auto& inimigo : inimigos) {
+                inimigo.dispararProjétil(heroi.getPosição());
+                inimigo.atualizarProjeteis(janela, heroi, base, vidaBase);
+            }
+
+            for (const auto& projétil : projéteis) {
+                projétil.desenhar(janela);
+            }
+
+            for (auto it = icones.begin(); it != icones.end(); ) {
+                it->draw(janela);
+
+                sf::FloatRect spriteBounds = it->getSprite().getGlobalBounds();
+                sf::RectangleShape spriteShape(sf::Vector2f(spriteBounds.width, spriteBounds.height));
+                spriteShape.setPosition(spriteBounds.left, spriteBounds.top);
+
+                if (colide(heroi.getCircle(), spriteShape)) {
+                    it = icones.erase(it);
+                } else {
+                    ++it;
+                }
+            }
+        } else if (fimDeJogo) {
+            fimJogo.atualizar(inimigosDestruídos);
+            fimJogo.draw(janela);
+
+            auto now = std::chrono::steady_clock::now();
+            if (now - fimJogoTempo >= std::chrono::seconds(1)) {
+                if (evento.type == sf::Event::KeyPressed) {
+                    vidaBase = 100;
+                    heroi.setVida(100, 0);
+                    heroi.SetMunição(100);
+                    inimigosDestruídos = 0;
+                    projéteis.clear();
+                    inimigos.clear();
+                    icones.clear();
+                    lastAddTime = std::chrono::steady_clock::now(); 
+                    fimDeJogo = false;
+                    jogoAtivo = true;
+                }
+            }
         }
 
-        janela.display(); // Atualiza a tela
+        janela.display();
     }
 
     return 0;

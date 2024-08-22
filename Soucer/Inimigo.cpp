@@ -18,7 +18,7 @@ Inimigo::Inimigo(const sf::Vector2f& posicaoInicial, const sf::Vector2f& direcao
 }
 
 void Inimigo::destruirInimigo(std::vector<Icone>& icones) {
-    // Gera uma chance de 1 em 5 para dropar um ícone
+    // Chance de 1 em 5 para dropar um ícone
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(1, 5);
@@ -27,10 +27,10 @@ void Inimigo::destruirInimigo(std::vector<Icone>& icones) {
 
     if (chance == 1) {
         // Dropa ícone de vida
-        icones.emplace_back("Media/Images/VIda+.png", corpo.getPosition(), sf::Vector2f(0.05f, 0.05f), true);
+        icones.emplace_back("Media/Images/Vida+.png", corpo.getPosition(), sf::Vector2f(0.04f, 0.04f), true);
     } else if (chance == 2) {
         // Dropa ícone de munição
-        icones.emplace_back("Media/Images/Mun+.png", corpo.getPosition(), sf::Vector2f(0.05f, 0.05f), false);
+        icones.emplace_back("Media/Images/Mun+.png", corpo.getPosition(), sf::Vector2f(0.04f, 0.04f), false);
     }
 }
 

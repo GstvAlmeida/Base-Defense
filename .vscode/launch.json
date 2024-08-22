@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/gstv/Documentos/base_defense",
-      "program": "/home/gstv/Documentos/base_defense/build/Debug/outDebug",
+      "cwd": "/home/gstv/Downloads/Base-Defense-main/Header",
+      "program": "/home/gstv/Downloads/Base-Defense-main/Header/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

@@ -17,7 +17,6 @@ public:
     void atualizarProjeteis(sf::RenderWindow& janela, Heroi& heroi, sf::RectangleShape& base, int& vidaBase);
     void destruirInimigo(std::vector<Icone>& icones);
 
-    // Método para acessar o corpo do inimigo
     const sf::CircleShape& getCorpo() const;
 
     static sf::Vector2f gerarInimigo(const sf::Vector2u& tamanhoJanela);
