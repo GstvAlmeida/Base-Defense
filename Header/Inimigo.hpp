@@ -20,7 +20,7 @@ public:
     // Método para acessar o corpo do inimigo
     const sf::CircleShape& getCorpo() const;
 
-    static sf::Vector2f gerarPosicaoAleatoriaNaBorda(const sf::Vector2u& tamanhoJanela);
+    static sf::Vector2f gerarInimigo(const sf::Vector2u& tamanhoJanela);
 
 private:
     sf::CircleShape corpo;

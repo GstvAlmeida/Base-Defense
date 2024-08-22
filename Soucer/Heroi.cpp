@@ -13,11 +13,21 @@ Heroi::Heroi()
 }
 
 void Heroi::setVida(int novaVida, int dano) {
-    this->vida = std::max(0, novaVida - dano);
+    if (novaVida - dano < 0) {
+        this->vida = 0;
+    } else if ((novaVida - dano) > 100){  
+        this->vida = 100;
+    } else {
+        this->vida = novaVida - dano;
+    };
 }
 
 void Heroi::setBase(int novaBase, int dano) {
-    this->base = std::max(0, novaBase - dano);
+    if (novaBase - dano < 0) {
+        this->base = 0;
+    } else {
+        this->base = novaBase - dano;
+    };
 }
 
 void Heroi::SetMunição(int novaMunição) {

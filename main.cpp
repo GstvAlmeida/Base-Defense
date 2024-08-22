@@ -5,6 +5,7 @@
 #include "Header/Projetil.hpp"
 #include "Header/Inimigo.hpp"
 #include "Header/Colide.hpp"
+#include "Header/Som.hpp"
 #include <iostream>
 #include <vector>
 #include <chrono>
@@ -39,6 +40,9 @@ int main() {
     Texto textoMunicao("Media/Font/ARIAL.TTF", "50", 20, sf::Color(74, 54, 30), sf::Vector2f(753, 30));
     Texto textoBase("Media/Font/ARIAL.TTF", "50", 20, sf::Color(0, 30, 0), sf::Vector2f(753, 57));
     Texto textoKill("Media/Font/ARIAL.TTF", "0", 20, sf::Color(0, 30, 0), sf::Vector2f(765, 82));
+    
+    Som Drop("Media/Sound/Life.flac");
+    Som Kill("Media/Sound/Kill.wav");
 
     std::vector<Projetil> projéteis;
     std::vector<Inimigo> inimigos;
@@ -65,7 +69,7 @@ int main() {
         if (now - lastAddTime >= intervalo) {
             lastAddTime = now;
 
-            sf::Vector2f posicaoInicial = Inimigo::gerarPosicaoAleatoriaNaBorda(janela.getSize());
+            sf::Vector2f posicaoInicial = Inimigo::gerarInimigo(janela.getSize());
             sf::Vector2f direcao(0.0f, 0.0f); // Direção inicial será ajustada na atualização
             float velocidade = 0.5f; // Ajuste a velocidade conforme necessário
 
@@ -135,6 +139,7 @@ int main() {
             if (removido) {
                 it->destruirInimigo(icones); // Adicione a chamada para destruirInimigo aqui
                 it = inimigos.erase(it); // Remove o inimigo se necessário
+                Kill.tocar();
             } else {
                 it->desenhar(janela); // Desenha o inimigo se não for removido
                 ++it;
@@ -167,8 +172,9 @@ int main() {
                 } else if (it->isAmmoIcon()) {
                     heroi.SetMunição(heroi.getMunição() + 10);
                 }
-
+                
                 it = icones.erase(it); // Remove o ícone após coleta
+                Drop.tocar();
             } else {
                 ++it;
             }   

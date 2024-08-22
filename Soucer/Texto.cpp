@@ -2,7 +2,7 @@
 
 Texto::Texto(const std::string& caminhoFonte, const std::string& conteudo, unsigned int tamanho, sf::Color cor, sf::Vector2f posicao) {
     if (!fonte.loadFromFile(caminhoFonte)) {
-        // Handle error
+        // Error
     }
     texto.setFont(fonte);
     texto.setString(conteudo);

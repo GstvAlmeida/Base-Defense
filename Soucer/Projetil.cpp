@@ -1,5 +1,9 @@
 #include "../Header/Projetil.hpp"
+#include "../Header/Som.hpp"
 #include <cmath>
+
+Som Tiro("Media/Sound/shoot.wav");
+Som Vazio("Media/Sound/empty_gun.wav");
 
 Projetil::Projetil(const sf::Vector2f& posiçãoInicial, const sf::Vector2f& direção, float velocidade)
     : direção(direção), velocidade(velocidade) {
@@ -30,6 +34,9 @@ void Projetil::dispararProjétil(Heroi& heroi, sf::RenderWindow& janela, std::ve
         direçãoMouse /= comprimento;
         projéteis.emplace_back(posiçãoHeroi, direçãoMouse, 5.0f); // Velocidade do projétil
         heroi.SetMunição(heroi.getMunição() - 1);
+        Tiro.tocar();
+    } else {
+        Vazio.tocar();
     }
 }
 

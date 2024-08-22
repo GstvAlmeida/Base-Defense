@@ -3,9 +3,12 @@
 #include "../Header/Heroi.hpp"
 #include "../Header/Colide.hpp"
 #include "../Header/Icone.hpp"
+#include "../Header/Som.hpp"
 #include <cmath>
 #include <random>
 #include <chrono>
+
+Som Tiro_I("Media/Sound/Shoot_en.wav");
 
 Inimigo::Inimigo(const sf::Vector2f& posicaoInicial, const sf::Vector2f& direcao, float velocidade)
     : direcao(direcao), velocidade(velocidade) {
@@ -44,7 +47,7 @@ void Inimigo::desenhar(sf::RenderWindow& janela) const {
     janela.draw(corpo);
 }
 
-sf::Vector2f Inimigo::gerarPosicaoAleatoriaNaBorda(const sf::Vector2u& tamanhoJanela) {
+sf::Vector2f Inimigo::gerarInimigo(const sf::Vector2u& tamanhoJanela) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<float> dis(0, 1);
@@ -69,7 +72,6 @@ sf::Vector2f Inimigo::gerarPosicaoAleatoriaNaBorda(const sf::Vector2u& tamanhoJa
     return posicao;
 }
 
-// Implementação do método getter
 const sf::CircleShape& Inimigo::getCorpo() const {
     return corpo;
 }
@@ -82,6 +84,7 @@ void Inimigo::dispararProjétil(const sf::Vector2f& posicaoHeroi) {
         direção /= comprimento;
         projéteisInimigos.emplace_back(corpo.getPosition(), direção, 5.0f);
         ultimoDisparo = agora;
+        Tiro_I.tocar();
     }
 }
 
