@@ -3,7 +3,7 @@
 #include "../Header/Som.hpp"
 
 Fim::Fim(int inimigosDestruídos, sf::Font& fonte)
-    : inimigosDestruídos(inimigosDestruídos), font(fonte), textoFim("Media/Font/WHAPER.ttf", "Kills: ", 60, sf::Color::Red, sf::Vector2f(325, 265)) {
+    : inimigosDestruídos(inimigosDestruídos), font(fonte), textoFim("Media/Font/WHAPER.ttf", "Kills ", 60, sf::Color::Red, sf::Vector2f(325, 265)) {
 }
 
 void Fim::atualizar(int inimigosDestruídos) {
