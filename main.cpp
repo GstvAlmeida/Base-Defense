@@ -198,7 +198,14 @@ int main() {
                 spriteShape.setPosition(spriteBounds.left, spriteBounds.top);
 
                 if (colide(heroi.getCircle(), spriteShape)) {
+                    if (it->isLifeIcon()) {
+                        heroi.setVida(heroi.getVida() + 10, 0);
+                    } else if (it->isAmmoIcon()) {
+                        heroi.SetMunição(heroi.getMunição() + 10);
+                    }
+                    
                     it = icones.erase(it);
+                    Drop.tocar();
                 } else {
                     ++it;
                 }
